@@ -1,3 +1,14 @@
 data/
 __pycache__/
 .ipynb_checkpoints/
+
+
+.idea/.gitignore
+.idea/Deep_Learning_Project_1.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.vscode/
+
+
