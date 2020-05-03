@@ -21,6 +21,7 @@ class EnhancedSiamese:
             if (verbose) and (e % 5 == 1):
                 print("Epochs {}".format(e))
                 print("loss = {}, loss_img = {}, loss_comp = {}".format(loss, loss_img, loss_comp))
+
             for b in range(0, train_input_1.size(0), mini_batch_size):
                 # digit classification
                 output_img_1 = self.model_digit(train_input_1.narrow(0, b, mini_batch_size))
