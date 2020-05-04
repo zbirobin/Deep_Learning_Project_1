@@ -17,8 +17,11 @@ class EnhancedSiamese:
         criterion_digit = nn.CrossEntropyLoss()
         criterion_comp = nn.BCELoss()
 
+        loss = 0
+        loss_img = 0
+        loss_comp = 0
         for e in range(nb_epochs):
-            if (verbose) and (e % 5 == 1):
+            if verbose and (e % 5 == 1):
                 print("Epochs {}".format(e))
                 print("loss = {}, loss_img = {}, loss_comp = {}".format(loss, loss_img, loss_comp))
 
