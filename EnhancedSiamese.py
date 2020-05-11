@@ -5,9 +5,9 @@ from Nets import DigitNet, CompNet
 
 class EnhancedSiamese:
 
-    def __init__(self, nb_hidden):
+    def __init__(self, nb_hidden, weight_sharing = True):
         self.model_digit = DigitNet(nb_hidden)
-        self.model_comp = CompNet(self.model_digit)
+        self.model_comp = CompNet(self.model_digit, weight_sharing = weight_sharing)
 
     def train(self,
               train_input_1, train_input_2, train_classes_1, train_classes_2, train_target,

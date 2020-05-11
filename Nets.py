@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+import copy
 
 
 class DigitNet(nn.Module):
@@ -21,15 +22,27 @@ class DigitNet(nn.Module):
 
 
 class CompNet(torch.nn.Module):
-    def __init__(self, digitNet):
+    def __init__(self, digitNet, weight_sharing = True):
         super(CompNet, self).__init__()
-        self.digitNet = digitNet
+        
+        self.weight_sharing = weight_sharing
+        
+        if (self.weight_sharing) :
+            self.digitNet = digitNet
+        else :
+            self.digitNet1 = copy.deepcopy(digitNet)
+            self.digitNet2 = copy.deepcopy(digitNet)
+            
         self.fc1 = nn.Linear(20, 50)
         self.fc2 = nn.Linear(50, 2)
 
     def forward(self, x1, x2, train=True):
-        x1 = self.digitNet.forward(x1)
-        x2 = self.digitNet.forward(x2)
+        if (self.weight_sharing) :
+            x1 = self.digitNet.forward(x1)
+            x2 = self.digitNet.forward(x2)
+        else :
+            x1 = self.digitNet1.forward(x1)
+            x2 = self.digitNet2.forward(x2)
         x = torch.cat((x1, x2), 1)
         x = F.relu(self.fc1(x))
         x = F.dropout(x, p=0.25, training=train)

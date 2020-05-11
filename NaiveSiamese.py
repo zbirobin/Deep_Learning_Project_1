@@ -6,9 +6,9 @@ from Nets import DigitNet, CompNet
 
 class NaiveSiamese:
 
-    def __init__(self, nb_hidden):
+    def __init__(self, nb_hidden, weight_sharing = True):
         model_digit = DigitNet(nb_hidden)
-        self.model = CompNet(model_digit)
+        self.model = CompNet(model_digit, weight_sharing = weight_sharing)
 
     def train(self, train_input_1, train_input_2, train_target, mini_batch_size=25,
               nb_epochs=25, lr=1e-1, verbose=False):
