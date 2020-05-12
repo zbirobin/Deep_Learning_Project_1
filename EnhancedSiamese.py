@@ -5,9 +5,16 @@ from Nets import DigitNet, CompNet
 
 class EnhancedSiamese:
 
-    def __init__(self, nb_hidden, weight_sharing = True):
-        self.model_digit = DigitNet(nb_hidden)
-        self.model_comp = CompNet(self.model_digit, weight_sharing = weight_sharing)
+    def __init__(self, nb_hidden, weight_sharing=True):
+        if weight_sharing:
+            self.model_digit = DigitNet(nb_hidden)
+            self.model_comp = CompNet(self.model_digit, weight_sharing=weight_sharing)
+        else:
+            self.model_digit_1 = DigitNet(nb_hidden)
+            self.model_digit_2 = DigitNet(nb_hidden)
+            self.model_comp = CompNet(self.model_digit_1, self.model_digit_2, weight_sharing=weight_sharing)
+
+        self.weight_sharing = weight_sharing
 
     def train(self,
               train_input_1, train_input_2, train_classes_1, train_classes_2, train_target,
@@ -26,9 +33,22 @@ class EnhancedSiamese:
                 print("loss = {}, loss_img = {}, loss_comp = {}".format(loss, loss_img, loss_comp))
 
             for b in range(0, train_input_1.size(0), mini_batch_size):
-                # digit classification
-                output_img_1 = self.model_digit(train_input_1.narrow(0, b, mini_batch_size))
-                output_img_2 = self.model_digit(train_input_2.narrow(0, b, mini_batch_size))
+
+                if self.weight_sharing:
+
+                    # digit classification
+                    output_img_1 = self.model_digit(train_input_1.narrow(0, b, mini_batch_size))
+                    output_img_2 = self.model_digit(train_input_2.narrow(0, b, mini_batch_size))
+
+                    self.model_digit.zero_grad()
+
+                else:
+                    # digit classification
+                    output_img_1 = self.model_digit_1(train_input_1.narrow(0, b, mini_batch_size))
+                    output_img_2 = self.model_digit_2(train_input_2.narrow(0, b, mini_batch_size))
+
+                    self.model_digit_1.zero_grad()
+                    self.model_digit_2.zero_grad()
 
                 loss_img_1 = criterion_digit(output_img_1, train_classes_1.narrow(0, b, mini_batch_size))
                 loss_img_2 = criterion_digit(output_img_2, train_classes_2.narrow(0, b, mini_batch_size))
@@ -40,17 +60,14 @@ class EnhancedSiamese:
                 batch_target = train_target.narrow(0, b, mini_batch_size)
 
                 loss_comp = criterion_comp(output_comp, batch_target)
-
                 loss = loss_img + loss_comp
 
-                self.model_digit.zero_grad()
                 self.model_comp.zero_grad()
                 loss.backward()
-
                 optimizer_comp.step()
 
-    def compute_errors(self,
-                       data_input_1, data_input_2, data_target, mini_batch_size=25):
+    def test(self,
+             data_input_1, data_input_2, data_target, mini_batch_size=25):
 
         nb_data_errors = 0
 

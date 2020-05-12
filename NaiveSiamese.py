@@ -6,9 +6,14 @@ from Nets import DigitNet, CompNet
 
 class NaiveSiamese:
 
-    def __init__(self, nb_hidden, weight_sharing = True):
-        model_digit = DigitNet(nb_hidden)
-        self.model = CompNet(model_digit, weight_sharing = weight_sharing)
+    def __init__(self, nb_hidden, weight_sharing=True):
+        if weight_sharing:
+            model_digit = DigitNet(nb_hidden)
+            self.model = CompNet(model_digit, weight_sharing=weight_sharing)
+        else:
+            model_digit_1 = DigitNet(nb_hidden)
+            model_digit_2 = DigitNet(nb_hidden)
+            self.model = CompNet(model_digit_1, model_digit_2, weight_sharing=weight_sharing)
 
     def train(self, train_input_1, train_input_2, train_target, mini_batch_size=25,
               nb_epochs=25, lr=1e-1, verbose=False):
@@ -35,7 +40,7 @@ class NaiveSiamese:
                 loss.backward()
                 optimizer.step()
 
-    def compute_errors(self, data_input_1, data_input_2, data_target, mini_batch_size=25):
+    def test(self, data_input_1, data_input_2, data_target, mini_batch_size=25):
 
         nb_data_errors = 0
 
