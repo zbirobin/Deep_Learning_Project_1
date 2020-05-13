@@ -46,6 +46,6 @@ class CompNet(torch.nn.Module):
         x = torch.cat((x1, x2), 1)
         x = F.relu(self.fc1(x))
         x = F.dropout(x, p=0.25, training=train)
-        x = F.relu(self.fc2(x))
+        x = self.fc2(x)
         x = torch.sigmoid(x)
         return x
