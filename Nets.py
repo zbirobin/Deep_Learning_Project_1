@@ -5,6 +5,7 @@ import copy
 
 
 class DigitNet(nn.Module):
+    """Used for digit classification"""
     def __init__(self, nb_hidden):
         super(DigitNet, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
@@ -22,11 +23,12 @@ class DigitNet(nn.Module):
 
 
 class CompNet(torch.nn.Module):
+
     def __init__(self, digitnet_1, digitnet_2=None, weight_sharing=True):
         super(CompNet, self).__init__()
 
         self.weight_sharing = weight_sharing
-
+        # Uses the same digit net for both images if weight sharing is enabled
         if self.weight_sharing:
             self.digitNet = digitnet_1
         else:
@@ -37,6 +39,8 @@ class CompNet(torch.nn.Module):
         self.fc2 = nn.Linear(50, 2)
 
     def forward(self, x1, x2, train=True):
+
+        # Uses the same digit net for both images if weight sharing is enabled
         if self.weight_sharing:
             x1 = self.digitNet.forward(x1)
             x2 = self.digitNet.forward(x2)

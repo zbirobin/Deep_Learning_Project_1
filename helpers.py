@@ -37,3 +37,12 @@ def shuffle_data(tr_input_1, tr_input_2, tr_classes_1, tr_classes_2, tr_targets)
     new_tr_classes_2 = tr_classes_2[idx]
 
     return new_tr_input_1, new_tr_input_2, new_tr_classes_1, new_tr_classes_2, new_targets
+
+
+def compute_nb_errors(targets, offset, predicted, mini_batch_size):
+    errors = 0
+    # Count the number of errors
+    for k in range(mini_batch_size):
+        if not torch.equal(torch.eq(targets[offset + k], predicted[k]), torch.tensor([True, True])):
+            errors += 1
+    return errors
