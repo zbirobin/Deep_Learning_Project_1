@@ -22,7 +22,7 @@ class DigitNet(nn.Module):
         return x
 
 
-class CompNet(torch.nn.Module):
+class CompNet(nn.Module):
 
     def __init__(self, digitnet_1, digitnet_2=None, weight_sharing=True):
         super(CompNet, self).__init__()
