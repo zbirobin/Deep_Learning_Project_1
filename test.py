@@ -10,14 +10,14 @@ nb_epochs = 75  # Number of training epochs
 lr = 0.5 * 1e-1  # learning rate of the gradient descent algorithm
 nb_hidden = 500  # Size of the hidden layer used in DigitNet
 
-"""        **** Data loading and pre-processing ****       """
+""" Data loading and pre-processing """
 train_input, train_target, train_classes, test_input, test_target, test_classes = load_process_data(N)
 
-# Divides the pairs into two distinct datasets
+# Divides the pairs into two distinct datasets for left image and right image
 train_input_left, train_input_right, train_classes_left, train_classes_right = divide_pairs(train_input, train_classes)
 test_input_left, test_input_right, test_classes_left, test_classes_right = divide_pairs(test_input, test_classes)
 
-"""         **** Train & Test procedure ****        """
+"""Train & Test procedure """
 # Containers for error rates ( 0 < error < 1 )
 errors_naive_noWS = np.zeros(nb_rounds)
 errors_noWS = np.zeros(nb_rounds)
@@ -64,7 +64,7 @@ for i in range(0, nb_rounds):
     errors_naive[i] = naive_siamese.test(test_input_left, test_input_right, test_target)
     errors[i] = enhanced_siamese.test(test_input_left, test_input_right, test_target)
 
-"""       **** Generate plot *****          """
+"""Generate plot"""
 # Generates results (see results.pdf in root)
 gen_results_plot(errors, errors_naive, errors_noWS, errors_naive_noWS)
 
