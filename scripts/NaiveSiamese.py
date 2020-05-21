@@ -1,7 +1,7 @@
 import torch
 from torch import nn
-import helpers
-from Nets import DigitNet, CompNet
+from scripts import helpers
+from scripts.Nets import DigitNet, CompNet
 
 
 class NaiveSiamese:

@@ -1,11 +1,11 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-import copy
 
 
 class DigitNet(nn.Module):
     """Used for digit classification"""
+
     def __init__(self, nb_hidden):
         super(DigitNet, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
