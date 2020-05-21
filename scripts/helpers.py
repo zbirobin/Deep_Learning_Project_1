@@ -4,6 +4,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def load_process_data(data_size):
+    # load data from source
+    train_input, train_target, train_classes, \
+    test_input, test_target, test_classes = prologue.generate_pair_sets(data_size)
+
+    # use 1-hot encoding for targets
+    train_target = encode_to_one_hot(train_target)
+    test_target = encode_to_one_hot(test_target)
+
+    mean = train_input.mean(dim=(0, 2, 3), keepdim=True)
+    std = train_input.std(dim=(0, 2, 3), keepdim=True)
+
+    # Normalize data by removing mean and subtracting by the std
+    normalize(train_input, mean, std)
+    normalize(test_input, mean, std)
+
+    return train_input, train_target, train_classes, test_input, test_target, test_classes
+
+
 def encode_to_one_hot(target):
     n = target.size(0)
     result = torch.zeros((n, 2))

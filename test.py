@@ -11,20 +11,7 @@ lr = 0.5 * 1e-1  # learning rate of the gradient descent algorithm
 nb_hidden = 500  # Size of the hidden layer used in DigitNet
 
 """        **** Data loading and pre-processing ****       """
-# load data from source
-train_input, train_target, train_classes, \
-test_input, test_target, test_classes = prologue.generate_pair_sets(N)
-
-# use 1-hot encoding for targets
-train_target = encode_to_one_hot(train_target)
-test_target = encode_to_one_hot(test_target)
-
-mean = train_input.mean(dim=(0, 2, 3), keepdim=True)
-std = train_input.std(dim=(0, 2, 3), keepdim=True)
-
-# Normalize data by removing mean and subtracting by the std
-normalize(train_input, mean, std)
-normalize(test_input, mean, std)
+train_input, train_target, train_classes, test_input, test_target, test_classes = load_process_data(N)
 
 # Divides the pairs into two distinct datasets
 train_input_left, train_input_right, train_classes_left, train_classes_right = divide_pairs(train_input, train_classes)
